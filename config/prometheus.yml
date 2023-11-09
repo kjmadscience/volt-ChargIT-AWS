@@ -1,0 +1,38 @@
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["localhost:9090"]
+  - job_name: "Monitoring-node-os"
+    static_configs:
+      - targets: ["localhost:9100"]
+  - job_name: "TestClient-node-os"
+    static_configs: 
+      - targets: ["ip-172-31-34-154.eu-north-1.compute.internal:9100"]
+  - job_name: "2-TestClient-node-os"
+    static_configs:
+      - targets: ["ip-172-31-42-20.eu-north-1.compute.internal:9100"]
+  - job_name: "3-TestClient-node-os"
+    static_configs:
+     - targets: ["ip-172-31-39-107.eu-north-1.compute.internal:9100"]
+#  - job_name: "4-TestClient-node-os"
+#    static_configs:
+#      - targets: ["ip-172-31-34-178.eu-north-1.compute.internal:9100"]
+#  - job_name: "5-TestClient-node-os"
+#    static_configs:
+#      - targets: ["ip-172-31-34-179.eu-north-1.compute.internal:9100"]
+#  - job_name: "6-TestClient-node-os"
+#    static_configs:
+#      - targets: ["ip-172-31-33-100.eu-north-1.compute.internall:9100"]  
+  - job_name: "Volt-metrics"
+    static_configs:
+      - targets: ["ip-172-31-46-144.eu-north-1.compute.internal:11781"]
+        labels:
+          namespace: 'one-volt'
+  - job_name: "Volt-Node-os"
+    static_configs:
+      - targets: ["ip-172-31-46-144.eu-north-1.compute.internal:9100"]

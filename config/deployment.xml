@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<deployment>
+    <cluster id="0"
+             hostcount="1"
+             sitesperhost="16"
+             kfactor="0"
+            />
+    <httpd enabled="true" />
+    <snapshot enabled="false"/>
+    <commandlog enabled="false" />
+    <topics enabled="false">
+        <topic name="ADDCREDIT" procedure="AddCredit">
+        </topic>
+        <topic name="USER_FINANCIAL_EVENTS" retention="2hr" />
+    </topics>
+    <metrics enabled="true"
+        interval="15s"
+        maxbuffersize="64"
+        />
+    <users>
+        <user name="default"
+              password="password"
+                />
+    </users>
+</deployment>

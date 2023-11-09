@@ -9,7 +9,7 @@ The use-case for simulation is a telecom rating and charging application. Full d
 
 ### Pre-requisites
 
-- [x] Have process access setup to AWS ENG Organisation.
+- [x] Have proper access setup to AWS ENG Organisation.
 - [x] Install aws CLI on your local terminal
 
 ### Getting Started
@@ -25,6 +25,15 @@ Note: replace the `--key-name` in create commands with values of your AWS key na
 
 Now with the VMs started, you can use the [getIP.sh](getIP.sh) file to get the various addresses of the machines, privateDNS, publicDNS and IP for grafana and volt VMC. 
 
-### Settinh up the config
+### Setting up the config
 
 There is a sample [deployment.xml](config/deployment.xml) and [prometheus.yml](config/deployment.xml) for your reference. 
+
+Add the host addresses for Volt and test client nodes in prometheus config file for collecting metrics. 
+Each AMI has node-exporter agent installed on it. We just need to update the relevant node address in the prometheus config. Ensure to restart the service upon any change in config in order for it to be taken into effect.
+
+After changing volt config in deployment file, use scp and aws key to copy this file to your newly started volt nodes. 
+
+### Let's start the test client
+
+first, Schema, depending on whether you want to enable topics and/or/nor import/export make changes to the schema ddl present on any of the test client nodes at `~/voltdb-charglt/ddl/create_db.sql`

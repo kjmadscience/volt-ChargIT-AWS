@@ -32,8 +32,59 @@ There is a sample [deployment.xml](config/deployment.xml) and [prometheus.yml](c
 Add the host addresses for Volt and test client nodes in prometheus config file for collecting metrics. 
 Each AMI has node-exporter agent installed on it. We just need to update the relevant node address in the prometheus config. Ensure to restart the service upon any change in config in order for it to be taken into effect.
 
+Following commands help starting various services on the `Monitoring Server`
+
+```
+ssh -i kj-mac.pem ubuntu@ec2-13-51-13-245.eu-north-1.compute.amazonaws.com
+
+sudo -i
+
+systemctl status node_exporter.service
+
+systemctl status grafana-server.service
+
+systemctl start node_exporter.service
+
+systemctl start grafana-server.service
+```
+Sequence to change prometheus config and restart service 
+```
+vim /etc/prometheus/prometheus.yml
+
+systemctl stop prometheus.service
+
+systemctl start  prometheus.service
+
+systemctl status prometheus.service
+```
+If the prometheus.yml file is not formatted properly or has syntax errors, prometheus service will not successfully start, we suggest you replace the entire file with the file in this repo and just change host addresses for relevant nodes.
 After changing volt config in deployment file, use scp and aws key to copy this file to your newly started volt nodes. 
 
+when using the new metrics system for monitoring, which is used in this use case, we need to ensure the `scrape_interval` and `evaluation_interval` in `prometheus.yml` is configured at the same value as `interval` in `metrics` in volt's `deployment.xml`
+
+The next step is to copy your custom `deployment.xml` to volt node and start volt. 
+Following commands are as a guideline:
+
+```
+scp -i ~/Documents/kj-mac.pem deployment.xml ubuntu@ec2-16-171-155-185.eu-north-1.compute.amazonaws.com:/home/ubuntu/voltdb/bin
+
+./voltdb init --config deployment.xml --force
+
+nohup ./voltdb start &
+
+ubuntu@ip-172-31-37-129:~/voltdb/bin$ tail -f nohup.out
+
+Connecting to the cluster as the leader...
+Host id of this node is: 0
+Starting a new database cluster
+WARN: User authentication is not enabled. The database is accessible and could be modified or shut down by anyone on the network.
+Starting database server with valid commercial license. License for 50 nodes expires on Jun 30, 2024.
+Initializing the database. This may take a moment...
+WARN: This is not a highly available cluster. K-Safety is set to 0.
+WARN: Durability is turned off. Command logging is off.
+Server Operational State is: NORMAL
+Server completed initialization.
+```
 ### Let's start the test client
 
 first, Schema, depending on whether you want to enable topics and/or/nor import/export make changes to the schema ddl present on any of the test client nodes at `~/voltdb-charglt/ddl/create_db.sql`
